@@ -1,35 +1,5 @@
 'use strict';
 
-/*The user must be able to search for parks in one or more states.
-The user must be able to set the max number of results, with a default of 10.
-
-https://www.nps.gov/subjects/developer/api-documentation.htm#/parks/getPark
-
-'https://developer.nps.gov/api/v1/parks?parkCode=acad&api_key=INSERT-API-KEY-HERE'
-
-key: hP5vtbLcAUtZzezetI0Zs09hlYDFwsAPfZdoaZok
-
-https://developer.nps.gov/api/v1/parks?parkCode=acad&api_key=hP5vtbLcAUtZzezetI0Zs09hlYDFwsAPfZdoaZok
-
-
-
-
-The search must trigger a call to NPS's API.
-
-
-The parks in the given state must be displayed on the page. Include at least:
-Full name
-Description
-Website URL
-The user must be able to make multiple searches and see only the results for the current search.
-As a stretch goal, try adding the park's address to the results. */
-//curl -X GET "https://developer.nps.gov/api/v1/parks?stateCode=new%20york&stateCode=&limit=10&api_key=hP5vtbLcAUtZzezetI0Zs09hlYDFwsAPfZdoaZok" -H "accept: application/json"
-//key = hP5vtbLcAUtZzezetI0Zs09hlYDFwsAPfZdoaZok
-
-// https://developer.nps.gov/api/v1/parks?parkCode=acad&api_key=hP5vtbLcAUtZzezetI0Zs09hlYDFwsAPfZdoaZok     
-
-
-
 
 function getPark(fetchUrl){
   fetch(fetchUrl)
@@ -37,34 +7,39 @@ function getPark(fetchUrl){
     .then(responseJson => {
       let data = responseJson.data;
       generateTemplate(data);
-      console.log(data);
     });
 }
 
 
 function generateTemplate(data){
+  const dataArr = [];
   data.forEach(element => {
     let dataObj= {
       Name: element.fullName,
       Description: element.description,
-      URL: element.url,
-      Latlongitude: element.latLong
+      URL: element.url
     };
-    console.log(dataObj);
-    formatResults(dataObj);
-
+    dataArr.push(dataObj);
+    formatResults(dataArr);
+    console.log(dataArr);
   });
 }
 
-function formatResults(dataObj){
-  let html = JSON.stringify(dataObj);
+function formatResults(dataArr){
+  let html = '';
+  for(let i = 0; i < dataArr.length; i++){
+    let name = dataArr[i].Name;
+    let description = dataArr[i].Description;
+    let url = dataArr[i].URL;
+    html = `<br>${name} <br> ${description} <br> <a href=${url}>${url}</a> <br> <br>`;
+  }
+  console.log(html);
   renderResults(html);
-
 }
 
 function renderResults(html){
   
-$('.search-results').html(html);
+  $('.search-results').append(html);
 
 }
 
@@ -87,7 +62,6 @@ function userRequestState(){
 
 function mainfunction(){
   userRequestState();
-  
 }
 
 $(mainfunction);
