@@ -8,14 +8,15 @@
 <body>
   <main>
 <h1>State Park Search</h1>
-<form id="state">
-  <label for="state">What state would you like to search?</label>
+<form id="search-parameters">
+  <label for="state">Input a two-letter state code</label>
     <input type="text" id="state" name="state">
+    
+    <label for="number-of-results-input">How many results would you like to see?</label>
+    <input type="text" id="number-of-results-input" name="number-of-results-input">
     <button type="submit" id="submit-state">Search</button>
-  <label for="results-num">How many results would you like to see?</label>
-    <input type="text" id="results-num" name="results-num">
 </form>
-
+<div class="search-results"></div>
 
   </main>
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>

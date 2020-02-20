@@ -28,40 +28,66 @@ As a stretch goal, try adding the park's address to the results. */
 
 // https://developer.nps.gov/api/v1/parks?parkCode=acad&api_key=hP5vtbLcAUtZzezetI0Zs09hlYDFwsAPfZdoaZok     
 
-function getPark(){
-  fetch('https://developer.nps.gov/api/v1/parks?parkCode=acad&api_key=hP5vtbLcAUtZzezetI0Zs09hlYDFwsAPfZdoaZok')
+
+
+
+function getPark(fetchUrl){
+  fetch(fetchUrl)
     .then(response => response.json())
     .then(responseJson => {
-      console.log(responseJson.data[0]);
-      let data = responseJson.data[0];
+      let data = responseJson.data;
       generateTemplate(data);
+      console.log(data);
     });
 }
 
 
 function generateTemplate(data){
-  
+  data.forEach(element => {
+    let dataObj= {
+      Name: element.fullName,
+      Description: element.description,
+      URL: element.url,
+      Latlongitude: element.latLong
+    };
+    console.log(dataObj);
+    formatResults(dataObj);
+
+  });
 }
 
-function render(){
-
-
+function formatResults(dataObj){
+  let html = JSON.stringify(dataObj);
+  renderResults(html);
 
 }
 
+function renderResults(html){
   
-function userRequest(){
-  $('#state').submit(function(event){
+$('.search-results').html(html);
+
+}
+
+function generateServerRequest(state, limit){
+
+  let fetchUrl = `https://developer.nps.gov/api/v1/parks?stateCode=${state}&limit=${limit}&api_key=hP5vtbLcAUtZzezetI0Zs09hlYDFwsAPfZdoaZok`;
+
+  getPark(fetchUrl);
+}
+
+  
+function userRequestState(){
+  $('#search-parameters').submit(function(event){
     event.preventDefault();
-    console.log('go west');
-    getPark();
+    let state = $('#state').val();
+    let limit = $('#number-of-results-input').val();
+    generateServerRequest(state,limit);
   });
 }
 
 function mainfunction(){
-
-  userRequest();
-  getPark();
+  userRequestState();
+  
 }
 
 $(mainfunction);
